@@ -8,3 +8,4 @@ The main characteristics of these components, the connections to the arduino and
 * A DHT sensor to measure the temperature and humidity. The code also stopped the watering if the intraday temperature has arrived at 94%. However, I have to mentioned that in my case the electric-box with all the instrumentation except the DHT sensor that is outside is inside a small room opened to the exterior and in that circumstances the humidity is always bellow the real one so that, it does not work properly.
 * An LCD display to show the current time, the next watering time, the temperature, the humidity and the max humidity intraday. In case of using the button to change the watering duration it will show this time duration. And during the watering it displays the remaining time to finish the watering.
  
+![alt text](https://raw.githubusercontent.com/DanielDagnino/arduino_orchard_watering/branch/arduino_SS.png)
