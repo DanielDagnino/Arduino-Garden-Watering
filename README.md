@@ -7,6 +7,14 @@ The main characteristics of these components, the connections to the arduino and
    - https://www.esrl.noaa.gov/gmd/grad/solcalc/calcdetails.html
 * A DHT sensor to measure the temperature and humidity. The code also stopped the watering if the intraday temperature has arrived at 94%. However, I have to mentioned that in my case the electric-box with all the instrumentation except the DHT sensor that is outside is inside a small room opened to the exterior and in that circumstances the humidity is always bellow the real one so that, it does not work properly.
 * An LCD display to show the current time, the next watering time, the temperature, the humidity and the max humidity intraday. In case of using the button to change the watering duration it will show this time duration. And during the watering it displays the remaining time to finish the watering.
+* A Real Time Clock is used in order to avoid loosing the current time due to a power cut.
 
+The test circuit is show bellow (the valve is substituted by a light):
 ![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/IMG_20170430_175309.jpg?raw=true "Circuit")
+
+The display:
 ![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/IMG_20170430_175423.jpg?raw=true "Display")
+
+The final circuit with the vale:
+![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/IMG_20170430_000000.jpg?raw=true "Display")
+
