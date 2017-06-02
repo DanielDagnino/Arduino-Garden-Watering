@@ -1,5 +1,5 @@
 //*********************************************************************/
-//** Goal: Sunset/Sunrise Calculation.
+//** Goal: Water my plants at sunset and 3h before sunrise.
 //** Authors: Daniel Dagnino.
 //*********************************************************************/
 
