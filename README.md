@@ -11,8 +11,8 @@ The main characteristics of these components, the connections to the arduino and
 * Two buttons: One to change the watering period and the other to switch on/off the background LCD light.
 
 The final circuit with the vale:
-![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.jpg?raw=true "Fianl circuit")
-![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.jpg?raw=true "Valve")
+![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.JPG?raw=true "Fianl circuit")
+![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.JPG?raw=true "Valve")
 
 The display:
 ![alt text](https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/lcd.jpg?raw=true "Display")
