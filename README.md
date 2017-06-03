@@ -10,10 +10,12 @@ The main characteristics of these components, the connections to the arduino and
 * A Real Time Clock DS1307 is used in order to avoid loosing the current time due to a power cut.
 * Two buttons: One to change the watering period and the other to switch on/off the background LCD light.
 
+---
+
 The final circuit with the valve:
 
-<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.JPG" alt="Fianl circuit" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.JPG" alt="Valve" rotate="0" width="400" />
+<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.JPG" alt="Fianl circuit" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.JPG" alt="Valve" rotate="90" width="400" />
 
-The display:                                         The test circuit is show bellow (the valve is substituted by a light):
+The display:The test circuit is show bellow (the valve is substituted by a light):
 
 <img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/lcd.jpg" alt="Display" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/test.jpg" alt="Circuit" width="400" />
