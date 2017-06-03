@@ -14,10 +14,6 @@ The final circuit with the valve:
 
 <img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.JPG" alt="Fianl circuit" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.JPG" alt="Valve" rotate="0" width="400" />
 
-The display:
+The display:                                         The test circuit is show bellow (the valve is substituted by a light):
 
-<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/lcd.jpg" alt="Display" width="400" />
-
-The test circuit is show bellow (the valve is substituted by a light):
-
-<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/test.jpg" alt="Circuit" width="400" />
+<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/lcd.jpg" alt="Display" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/test.jpg" alt="Circuit" width="400" />
