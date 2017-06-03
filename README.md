@@ -1,4 +1,4 @@
-#Watering system for the orchard using an arduino
+# Watering system for the orchard using an arduino
 This is a project to water an urban orchard using an arduino. For this purpose I have used an electro-valve to control the watering, a sensor to measure the temperature and humidity, a LCD display to write information for the user, two buttons to modify the watering time and to open the LCD light and a Real Time Clock.
 The main characteristics of these components, the connections to the arduino and the code are the following:
 * The electro-valve requires a 220V current to work so that, it is connected to a relay. The relay is controlled by the arduino.
