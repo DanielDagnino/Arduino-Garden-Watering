@@ -1,7 +1,7 @@
   //=====================================================================
   //
-  //          Orchard watering syncronized with sunrise/sunset
-  //          ------------------------------------------------
+  //       Garden watering system syncronized with sunrise/sunset
+  //       ------------------------------------------------------
   //
   //                      Author: Daniel Dagnino
   //                        My garden, Spain
@@ -25,6 +25,10 @@
 //----------------------------------------------------------------------//
 // Declare libraries:
 
+// Set the led Pin.
+#define greenledPin 13
+bool greenledState;
+
 // Sunrise/sunset lib.
 #include <SRS.h>
 
@@ -47,10 +51,6 @@ LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I
 //----------------------------------------------------------------------//
 // Declare variables:
 
-// Set the led Pin.
-#define greenledPin 13
-bool greenledState;
-
 // Set the relay Pin.
 #define relayPin 7
 
@@ -58,12 +58,11 @@ bool greenledState;
 dht DHT;
 #define DHT11_PIN 8
 
-bool new_day = 1;
+bool new_day = true;
 int hum_max_today = 0;
 int hum_rain = 94;
 
 // Watering.
-bool Watering;
 unsigned long timeWatering;
 unsigned long timeWater_H = 6, timeWater_M = 30;  // Sunrise watering time.
 unsigned long timeWater2_H = 19, timeWater2_M = 30;  // Sunset watering time.
@@ -71,7 +70,7 @@ unsigned long timeWater2_H = 19, timeWater2_M = 30;  // Sunset watering time.
 // Button variables to define watering time.
 const int lcdLight_ButtonPin = 5;
 int lcdLight = 0;
-bool lcdLight_log = 0;
+bool lcdLight_log = false;
 
 // Button variables to define watering interval.
 const int timeIntervalButtonPin = 9;
@@ -85,10 +84,10 @@ unsigned long time1, time0 = -10000;
 
 // Init the DS1307.
 RTC_DS1307 RTC;
-int today;
+int today_saved;
 
 // 
-sun suntoday;
+sun sun;
 
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -115,7 +114,7 @@ void setup(){
   }
   
   // 
-  today = RTC.now().day();
+  today_saved = RTC.now().day();
   
   // LCD initialization.
   lcd.begin(16,2);                  
@@ -145,24 +144,24 @@ void loop(){
   // Calculate sunrise/set to water.
   
   // Current day.
-  suntoday.day   = now.day();
-  suntoday.month = now.month();
-  suntoday.year  = now.year();
+  sun.day   = now.day();
+  sun.month = now.month();
+  sun.year  = now.year();
   
   // Location.
-  suntoday.lat = 41.3851;
-  suntoday.lon = 2.1734;
-  suntoday.timeZone = 2;
+  sun.lat = 41.3851;
+  sun.lon = 2.1734;
+  sun.timeZone = 2;
 
   //Time sunrise/set calculation.
-  suntoday.calculate();
+  sun.calculate();
 
   // Define morning and afternoon watering times.
-  timeWater_H = suntoday.sunrise.hour;
-  timeWater_M = suntoday.sunrise.min;
+  timeWater_H = sun.sunrise.hour;
+  timeWater_M = sun.sunrise.min;
   
-  timeWater2_H = suntoday.sunset.hour;
-  timeWater2_M = suntoday.sunset.min;
+  timeWater2_H = sun.sunset.hour;
+  timeWater2_M = sun.sunset.min;
   timeWater2_H -= 2;   // Before sunset.
 
 //  // Test mode.
@@ -244,18 +243,18 @@ void loop(){
     }
     else{
       // Compute the next day watering time.
-      suntoday.day += 1;
-      suntoday.calculate();
-      timeWater_H = suntoday.sunrise.hour;
-      timeWater_M = suntoday.sunrise.min;
+      sun.day += 1;
+      sun.calculate();
+      timeWater_H = sun.sunrise.hour;
+      timeWater_M = sun.sunrise.min;
       Serial.print("TW = ");
       Serial.print(timeWater_H);
       Serial.print("h");
       Serial.print(timeWater_M);
       Serial.println("m");
       Serial.println();
-      suntoday.day -= 1;
-      suntoday.calculate();
+      sun.day -= 1;
+      sun.calculate();
     }
     
     // Time now.
@@ -282,25 +281,25 @@ void loop(){
     }
     else{
       // Compute the next day watering time.
-      suntoday.day += 1;
-      suntoday.calculate();
-      timeWater_H = suntoday.sunrise.hour;
-      timeWater_M = suntoday.sunrise.min;
+      sun.day += 1;
+      sun.calculate();
+      timeWater_H = sun.sunrise.hour;
+      timeWater_M = sun.sunrise.min;
       lcd.write("TW=");
       lcd.print(timeWater_H);
       lcd.write("h");
       lcd.print(timeWater_M);
       lcd.write("m");
-      suntoday.day -= 1;
-      suntoday.calculate();
+      sun.day -= 1;
+      sun.calculate();
     }
 
     // New day?
-    if ( now.day()!=today ){
-      today = now.day();
-      new_day = 1;
+    if ( now.day() != today_saved ){
+      today_saved = now.day();
+      new_day = true;
     }
-    else new_day = 0;
+    else new_day = false;
     
     //----------------------------------------------------------------------//
     // Valve state. 
@@ -312,6 +311,8 @@ void loop(){
     time0 = time1;
   }
   
+  //----------------------------------------------------------------------//
+  //----------------------------------------------------------------------//
   //----------------------------------------------------------------------//
   // Button control to swich on/off light.
   lcdLight = digitalRead(lcdLight_ButtonPin);   // Read button.
@@ -437,7 +438,6 @@ void loop(){
   }
   
 }
-
 
 
 
