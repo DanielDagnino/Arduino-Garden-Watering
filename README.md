@@ -16,6 +16,14 @@ The main characteristics of these components, the connections to the arduino and
 | --- | --- |
 | <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/final.JPG" alt="Fianl circuit" width="400" /> | <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/valve.JPG" alt="Valve" rotate="90" width="400" /> |
 
-| The display: | The test circuit is show bellow (the valve is substituted by a light): |
-| --- | --- |
-| <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/lcd.jpg" alt="Display" width="400" /> | <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/test.jpg" alt="Circuit" width="400" /> |
+<table>
+  <tr>
+    <td> The display: </td>
+    <td> The test circuit is show bellow (the valve is substituted by a light): </td>
+  </tr>
+  <tr>
+    <td> <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/lcd.jpg" alt="Display" width="400" /> </td>
+    <td> <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/test.jpg" alt="Circuit" width="400" /> </td>
+  </tr>
+</table>
+
