@@ -4,7 +4,7 @@
   //          ------------------------------------------------
   //
   //                      Author: Daniel Dagnino
-  //                        My orchard, Spain
+  //                        My garden, Spain
   //                       Copyright (C) 2017
   //
   // This program is free software; you can redistribute it and/or modify
