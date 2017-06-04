@@ -18,7 +18,6 @@ The main characteristics of these components, the connections to the arduino and
   </tr>
     <td> <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/final.JPG" alt="Fianl circuit" width="400" /> </td>
     <td> <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/valve.JPG" alt="Valve" rotate="90" width="400" /> </td>
-  </tr>
 </table>
 
 <table>
