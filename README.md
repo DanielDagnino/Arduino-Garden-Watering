@@ -1,5 +1,5 @@
-# Watering system for the orchard using an arduino
-This is a project to water an urban orchard using an arduino. For this purpose I have used an electro-valve to control the watering, a sensor to measure the temperature and humidity, a LCD display to write information for the user, two buttons to modify the watering time and to open the LCD light and a Real Time Clock.
+# Garden watering system using an arduino
+This is a project to water a graden using an arduino. For this purpose I have used an electro-valve to control the watering, a sensor to measure the temperature and humidity, a LCD display to write information for the user, two buttons to modify the watering time and to open the LCD light and a Real Time Clock.
 The main characteristics of these components, the connections to the arduino and the code are the following:
 * The electro-valve requires a 220V current to work so that, it is connected to a relay. The relay is controlled by the arduino.
 * The watering of the plants is done at sunrise and 3h before sunset. The watering time is calculated based on equations from Astronomical Algorithms, by Jean Meeus, it requires the local latitude and longitude and the current day. For more information:
@@ -14,8 +14,8 @@ The main characteristics of these components, the connections to the arduino and
 
 The final circuit with the valve:
 
-<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/final.JPG" alt="Fianl circuit" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/valve.JPG" alt="Valve" rotate="90" width="400" />
+<img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/final.JPG" alt="Fianl circuit" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/valve.JPG" alt="Valve" rotate="90" width="400" />
 
 The display:The test circuit is show bellow (the valve is substituted by a light):
 
-<img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/lcd.jpg" alt="Display" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino_orchard_watering/master/img/test.jpg" alt="Circuit" width="400" />
+<img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/lcd.jpg" alt="Display" width="400" /><img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/test.jpg" alt="Circuit" width="400" />
