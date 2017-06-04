@@ -1,7 +1,7 @@
   //=====================================================================
   //
-  //          Orchard watering syncronized with sunrise/sunset
-  //          ------------------------------------------------
+  //       Garden watering system syncronized with sunrise/sunset
+  //       ------------------------------------------------------
   //
   //                      Author: Daniel Dagnino
   //                        My garden, Spain
