@@ -56,7 +56,7 @@ LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I
 
 // Set the relay for the air pumping.
 #define airpump_relay_pin 9
-bool pump;
+bool is_time_to_pump;
 int period_pump_air_min = 3;  // 2 min of air pumping every 24/pump_per_day (pump_per_day times per day).
 int pump_per_day = 8;
 int time_pump_min;
@@ -71,8 +71,8 @@ int hum_rain = 80;
 
 // Watering.
 unsigned long timeWatering;
-unsigned long timeWater_H, timeWater_M;  // Sunrise watering time.
-unsigned long timeWater2_H, timeWater2_M;  // Sunset watering time.
+unsigned long time_water_morning_H, time_water_morning_M;  // Sunrise watering time.
+unsigned long time_water_evening_H, time_water_evening_M;  // Sunset watering time.
 
 // Button variables to define watering time.
 const int lcdLight_ButtonPin = 5;
@@ -82,8 +82,8 @@ bool lcdLight_log = false;
 // Button variables to define watering interval.
 const int timeIntervalButtonPin = 9;
 int ButtonIntervalWateringState;
-unsigned long TimeIntervalWatering = 20;   // Time of watering in seconds.
-int timeIntervalWatering_M, timeIntervalWatering_S;
+unsigned long period_watering_min = 56;   // Time of watering in seconds.
+int period_watering_M, period_watering_S;
 
 // Time variables.
 unsigned long timeRTC_H, timeRTC_M;
@@ -165,18 +165,18 @@ void loop(){
   sun.calculate();
 
   // Define morning and afternoon watering times.
-  timeWater_H = sun.sunrise.hour;
-  timeWater_M = sun.sunrise.min;
+  time_water_morning_H = sun.sunrise.hour;
+  time_water_morning_M = sun.sunrise.min;
   
-  timeWater2_H = sun.sunset.hour;
-  timeWater2_M = sun.sunset.min;
-  timeWater2_H -= 2;   // Before sunset.
+  time_water_evening_H = sun.sunset.hour;
+  time_water_evening_M = sun.sunset.min;
+  time_water_evening_H -= 2;   // Before sunset.
 
 //  // Test mode.
-//  timeWater_H = 0;
-//  timeWater_M = 0;
-//  timeWater2_H = 22;
-//  timeWater2_M = 23;
+//  time_water_morning_H = 0;
+//  time_water_morning_M = 0;
+//  time_water_evening_H = 22;
+//  time_water_evening_M = 23;
   
   //----------------------------------------------------------------------//
   // Every 10s:
@@ -233,19 +233,19 @@ void loop(){
     Serial.print("m");
     Serial.print("   ");
     // Schedule Time watering.
-    if ( timeRTC_H*60 + timeRTC_M < timeWater_H*60 + timeWater_M ){
+    if ( timeRTC_H*60 + timeRTC_M < time_water_morning_H*60 + time_water_morning_M ){
       Serial.print("TW = ");
-      Serial.print(timeWater_H);
+      Serial.print(time_water_morning_H);
       Serial.print("h");
-      Serial.print(timeWater_M);
+      Serial.print(time_water_morning_M);
       Serial.println("m");
       Serial.println();
     }
-    else if ( timeRTC_H*60 + timeRTC_M < timeWater2_H*60 + timeWater2_M ){
+    else if ( timeRTC_H*60 + timeRTC_M < time_water_evening_H*60 + time_water_evening_M ){
       Serial.print("TW = ");
-      Serial.print(timeWater2_H);
+      Serial.print(time_water_evening_H);
       Serial.print("h");
-      Serial.print(timeWater2_M);
+      Serial.print(time_water_evening_M);
       Serial.println("m");
       Serial.println();
     }
@@ -253,12 +253,12 @@ void loop(){
       // Compute the next day watering time.
       sun.day += 1;
       sun.calculate();
-      timeWater_H = sun.sunrise.hour;
-      timeWater_M = sun.sunrise.min;
+      time_water_morning_H = sun.sunrise.hour;
+      time_water_morning_M = sun.sunrise.min;
       Serial.print("TW = ");
-      Serial.print(timeWater_H);
+      Serial.print(time_water_morning_H);
       Serial.print("h");
-      Serial.print(timeWater_M);
+      Serial.print(time_water_morning_M);
       Serial.println("m");
       Serial.println();
       sun.day -= 1;
@@ -273,30 +273,30 @@ void loop(){
     lcd.write("m");
     lcd.write(" ");
     // Schedule Time watering.
-    if ( timeRTC_H*60 + timeRTC_M < timeWater_H*60 + timeWater_M ){
+    if ( timeRTC_H*60 + timeRTC_M < time_water_morning_H*60 + time_water_morning_M ){
       lcd.write("TW=");
-      lcd.print(timeWater_H);
+      lcd.print(time_water_morning_H);
       lcd.write("h");
-      lcd.print(timeWater_M);
+      lcd.print(time_water_morning_M);
       lcd.write("m");
     }
-    else if ( timeRTC_H*60 + timeRTC_M < timeWater2_H*60 + timeWater2_M ){
+    else if ( timeRTC_H*60 + timeRTC_M < time_water_evening_H*60 + time_water_evening_M ){
       lcd.write("TW=");
-      lcd.print(timeWater2_H);
+      lcd.print(time_water_evening_H);
       lcd.write("h");
-      lcd.print(timeWater2_M);
+      lcd.print(time_water_evening_M);
       lcd.write("m");
     }
     else{
       // Compute the next day watering time.
       sun.day += 1;
       sun.calculate();
-      timeWater_H = sun.sunrise.hour;
-      timeWater_M = sun.sunrise.min;
+      time_water_morning_H = sun.sunrise.hour;
+      time_water_morning_M = sun.sunrise.min;
       lcd.write("TW=");
-      lcd.print(timeWater_H);
+      lcd.print(time_water_morning_H);
       lcd.write("h");
-      lcd.print(timeWater_M);
+      lcd.print(time_water_morning_M);
       lcd.write("m");
       sun.day -= 1;
       sun.calculate();
@@ -335,25 +335,25 @@ void loop(){
   // Change watering time interval.
   ButtonIntervalWateringState = digitalRead(timeIntervalButtonPin);   // Read button.
   if (ButtonIntervalWateringState == HIGH){
-    TimeIntervalWatering += 2;   // Change counter.
-    if (TimeIntervalWatering >= 58) TimeIntervalWatering = 0;   // Watering time: Maximum is 58s.
-    timeIntervalWatering_M = TimeIntervalWatering/60;   // Counter to min and sec.
-    timeIntervalWatering_S = TimeIntervalWatering-timeIntervalWatering_M*60;
+    period_watering_min += 2;   // Change counter.
+    if (period_watering_min >= 90) period_watering_min = 0;   // Watering time: Maximum is 90s.
+    period_watering_M = period_watering_min/60;   // Counter to min and sec.
+    period_watering_S = period_watering_min-period_watering_M*60;
     
     Serial.print("Watering time = ");
-    Serial.print(timeIntervalWatering_M);
+    Serial.print(period_watering_M);
     Serial.print("m ");
-    Serial.print(timeIntervalWatering_S);
+    Serial.print(period_watering_S);
     Serial.println("s");
     
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.write("Watering time = ");
     lcd.setCursor(0,1);
-    lcd.print(timeIntervalWatering_M);
+    lcd.print(period_watering_M);
     lcd.write("m");
-    lcd.print(timeIntervalWatering_S);
-    lcd.write("s / Max 50s");
+    lcd.print(period_watering_S);
+    lcd.write("s / Max 90s");
     
     delay(100);   //Avoid too fast button.
   }
@@ -369,7 +369,7 @@ void loop(){
   
   //----------------------------------------------------------------------//
   // Watering sunrise.
-  if ( ( timeRTC_H*60 + timeRTC_M == timeWater_H*60 + timeWater_M ) && hum_max_today<hum_rain ) {
+  if ( ( timeRTC_H*60 + timeRTC_M == time_water_morning_H*60 + time_water_morning_M ) && hum_max_today<hum_rain ) {
     
     // Start watering: Open valve.
     Serial.println("Open valve");
@@ -384,18 +384,18 @@ void loop(){
     
     // Watering during a specific time.
     timeWatering = millis();
-    while ( millis()-timeWatering < TimeIntervalWatering*1000 ){
+    while ( millis()-timeWatering < period_watering_min*1000 ){
       
       Serial.print("                  ");
       Serial.print((millis()-timeWatering)/1000);
       Serial.print("s / ");
-      Serial.print(TimeIntervalWatering);
+      Serial.print(period_watering_min);
       Serial.println("s");
       
       lcd.setCursor(0,1);
       lcd.print((millis()-timeWatering)/1000);
       lcd.write("s / ");
-      lcd.print(TimeIntervalWatering);
+      lcd.print(period_watering_min);
       lcd.write("s");
       
       delay(1000);
@@ -407,13 +407,13 @@ void loop(){
     digitalWrite(relayPin, LOW);
     digitalWrite(greenledPin, LOW);
     
-    // Avoid reenter in the watering if TimeIntervalWatering is less than one minute.
-    while ( (RTC.now().hour()==timeWater_H && RTC.now().minute()==timeWater_M) ) delay(1000);
+    // Avoid reenter in the watering if period_watering_min is less than one minute.
+    while ( (RTC.now().hour()==time_water_morning_H && RTC.now().minute()==time_water_morning_M) ) delay(1000);
   }
   
   //----------------------------------------------------------------------//
   // Watering sunset.
-  if ( ( timeRTC_H*60 + timeRTC_M == timeWater2_H*60 + timeWater2_M ) && hum_max_today<hum_rain ) {
+  if ( ( timeRTC_H*60 + timeRTC_M == time_water_evening_H*60 + time_water_evening_M ) && hum_max_today<hum_rain ) {
     
     // Start watering: Open valve.
     Serial.println("Open valve");
@@ -428,17 +428,17 @@ void loop(){
     
     // Watering during a specific time.
     timeWatering = millis();
-    while ( millis()-timeWatering < TimeIntervalWatering*1000 ){
+    while ( millis()-timeWatering < period_watering_min*1000 ){
       Serial.print("                  ");
       Serial.print((millis()-timeWatering)/1000);
       Serial.print("s / ");
-      Serial.print(TimeIntervalWatering);
+      Serial.print(period_watering_min);
       Serial.println("s");
       
       lcd.setCursor(0,1);
       lcd.print((millis()-timeWatering)/1000);
       lcd.write("s / ");
-      lcd.print(TimeIntervalWatering);
+      lcd.print(period_watering_min);
       lcd.write("s");
       
       delay(1000);
@@ -450,41 +450,23 @@ void loop(){
     digitalWrite(relayPin, LOW);
     digitalWrite(greenledPin, LOW);
     
-    // Avoid reenter in the watering if TimeIntervalWatering is less than one minute.
-    while ( (RTC.now().hour()==timeWater2_H && RTC.now().minute()==timeWater2_M) ) delay(1000);
+    // Avoid reenter in the watering if period_watering_min is less than one minute.
+    while ( (RTC.now().hour()==time_water_evening_H && RTC.now().minute()==time_water_evening_M) ) delay(1000);
   }
   
   //----------------------------------------------------------------------//
   // Switch off air pumping.
-  pump = false;
+
+  // Is pumping?
+  is_time_to_pump = false;
   for(int k=0;k<pump_per_day;k++){
     time_pump_min = floor(1.0+(24.0/pump_per_day)*float(k)*60);
-    if ( timeRTC_H*60+timeRTC_M >= time_pump_min && timeRTC_H*60+timeRTC_M <= time_pump_min + period_pump_air_min ) pump = true;
+    if ( timeRTC_H*60+timeRTC_M >= time_pump_min && timeRTC_H*60+timeRTC_M <= time_pump_min + period_pump_air_min ) is_time_to_pump = true;
   }
-  
-  if ( !pump && digitalRead(airpump_relay_pin)==HIGH ) digitalWrite(airpump_relay_pin,LOW);
+
+  // If it is pumping but time to pump have finished, we close the pumper.
+  if ( !is_time_to_pump && digitalRead(airpump_relay_pin)==HIGH ) digitalWrite(airpump_relay_pin,LOW);
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
