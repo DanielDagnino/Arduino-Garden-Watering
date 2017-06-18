@@ -57,8 +57,9 @@ LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I
 // Set the relay for the air pumping.
 #define airpump_relay_pin 9
 bool pump;
-int pump_time = 2;  // 2 min of air pumping every 3h (8 times per day).
-int time_pump;
+int period_pump_air_min = 3;  // 2 min of air pumping every 24/pump_per_day (pump_per_day times per day).
+int pump_per_day = 8;
+int time_pump_min;
 
 // Set the DHT Pin.
 dht DHT;
@@ -66,12 +67,12 @@ dht DHT;
 
 bool new_day = true;
 int hum_max_today = 0;
-int hum_rain = 94;
+int hum_rain = 80;
 
 // Watering.
 unsigned long timeWatering;
-unsigned long timeWater_H = 6, timeWater_M = 30;  // Sunrise watering time.
-unsigned long timeWater2_H = 19, timeWater2_M = 30;  // Sunset watering time.
+unsigned long timeWater_H, timeWater_M;  // Sunrise watering time.
+unsigned long timeWater2_H, timeWater2_M;  // Sunset watering time.
 
 // Button variables to define watering time.
 const int lcdLight_ButtonPin = 5;
@@ -114,11 +115,11 @@ void setup(){
   // Initialize the rtc object
   RTC.begin();
   
-  if (!RTC.isrunning()) {
-    Serial.println("RTC is NOT running!");
+//  if (!RTC.isrunning()) {
+//    Serial.println("RTC is NOT running!");
     // following line sets the RTC to the date & time this sketch was compiled
     RTC.adjust(DateTime(__DATE__, __TIME__));
-  }
+//  }
   
   // 
   today_saved = RTC.now().day();
@@ -359,9 +360,10 @@ void loop(){
   
   //----------------------------------------------------------------------//
   // Switch on air pumping.
-  for(int k=0;k<8;k++){
-    time_pump = (1+3*float(k))*60;
-    if ( abs(timeRTC_H*60+timeRTC_M - time_pump) < pump_time && digitalRead(airpump_relay_pin)==LOW )
+  for(int k=0;k<pump_per_day;k++){
+    time_pump_min = floor(1.0+(24.0/pump_per_day)*float(k)*60);
+    if ( timeRTC_H*60+timeRTC_M >= time_pump_min && timeRTC_H*60+timeRTC_M <= time_pump_min + period_pump_air_min 
+         && digitalRead(airpump_relay_pin)==LOW )
       digitalWrite(airpump_relay_pin,HIGH);
   }
   
@@ -455,13 +457,34 @@ void loop(){
   //----------------------------------------------------------------------//
   // Switch off air pumping.
   pump = false;
-  for(int k=0;k<8;k++){
-    time_pump = (1+3*float(k))*60;
-    if ( abs(timeRTC_H*60+timeRTC_M - time_pump) < pump_time ) pump = true;
+  for(int k=0;k<pump_per_day;k++){
+    time_pump_min = floor(1.0+(24.0/pump_per_day)*float(k)*60);
+    if ( timeRTC_H*60+timeRTC_M >= time_pump_min && timeRTC_H*60+timeRTC_M <= time_pump_min + period_pump_air_min ) pump = true;
   }
   
   if ( !pump && digitalRead(airpump_relay_pin)==HIGH ) digitalWrite(airpump_relay_pin,LOW);
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
