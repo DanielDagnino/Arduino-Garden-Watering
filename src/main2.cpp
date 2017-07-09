@@ -1,4 +1,4 @@
-  //=====================================================================
+//=====================================================================
   //
   //       Garden watering system syncronized with sunrise/sunset
   //       ------------------------------------------------------
@@ -57,7 +57,7 @@ LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I
 // Set the relay for the air pumping.
 #define airpump_relay_pin 9
 bool is_time_to_pump;
-int period_pump_air_min = 3;  // 2 min of air pumping every 24/pump_per_day (pump_per_day times per day).
+int period_pump_air_min = 3;  // XXX min of air pumping every 24/pump_per_day (pump_per_day times per day).
 int pump_per_day = 8;
 int time_pump_min;
 
@@ -82,7 +82,7 @@ bool lcdLight_log = false;
 // Button variables to define watering interval.
 const int timeIntervalButtonPin = 9;
 int ButtonIntervalWateringState;
-unsigned long period_watering_min = 56;   // Time of watering in seconds.
+unsigned long period_watering_sec = 56;   // Time of watering in seconds.
 int period_watering_M, period_watering_S;
 
 // Time variables.
@@ -115,11 +115,11 @@ void setup(){
   // Initialize the rtc object
   RTC.begin();
   
-//  if (!RTC.isrunning()) {
-//    Serial.println("RTC is NOT running!");
+  if (!RTC.isrunning()) {
+    Serial.println("RTC is NOT running!");
     // following line sets the RTC to the date & time this sketch was compiled
     RTC.adjust(DateTime(__DATE__, __TIME__));
-//  }
+  }
   
   // 
   today_saved = RTC.now().day();
@@ -175,8 +175,8 @@ void loop(){
 //  // Test mode.
 //  time_water_morning_H = 0;
 //  time_water_morning_M = 0;
-//  time_water_evening_H = 22;
-//  time_water_evening_M = 23;
+//  time_water_evening_H = 19;
+//  time_water_evening_M = 00;
   
   //----------------------------------------------------------------------//
   // Every 10s:
@@ -335,10 +335,10 @@ void loop(){
   // Change watering time interval.
   ButtonIntervalWateringState = digitalRead(timeIntervalButtonPin);   // Read button.
   if (ButtonIntervalWateringState == HIGH){
-    period_watering_min += 2;   // Change counter.
-    if (period_watering_min >= 90) period_watering_min = 0;   // Watering time: Maximum is 90s.
-    period_watering_M = period_watering_min/60;   // Counter to min and sec.
-    period_watering_S = period_watering_min-period_watering_M*60;
+    period_watering_sec += 2;   // Change counter.
+    if (period_watering_sec >= 90) period_watering_sec = 0;   // Watering time: Maximum is 90s.
+    period_watering_M = period_watering_sec/60;   // Counter to min and sec.
+    period_watering_S = period_watering_sec-period_watering_M*60;
     
     Serial.print("Watering time = ");
     Serial.print(period_watering_M);
@@ -384,18 +384,18 @@ void loop(){
     
     // Watering during a specific time.
     timeWatering = millis();
-    while ( millis()-timeWatering < period_watering_min*1000 ){
+    while ( millis()-timeWatering < period_watering_sec*1000 ){
       
       Serial.print("                  ");
       Serial.print((millis()-timeWatering)/1000);
       Serial.print("s / ");
-      Serial.print(period_watering_min);
+      Serial.print(period_watering_sec);
       Serial.println("s");
       
       lcd.setCursor(0,1);
       lcd.print((millis()-timeWatering)/1000);
       lcd.write("s / ");
-      lcd.print(period_watering_min);
+      lcd.print(period_watering_sec);
       lcd.write("s");
       
       delay(1000);
@@ -407,7 +407,7 @@ void loop(){
     digitalWrite(relayPin, LOW);
     digitalWrite(greenledPin, LOW);
     
-    // Avoid reenter in the watering if period_watering_min is less than one minute.
+    // Avoid reenter in the watering if period_watering_sec is less than one minute.
     while ( (RTC.now().hour()==time_water_morning_H && RTC.now().minute()==time_water_morning_M) ) delay(1000);
   }
   
@@ -428,17 +428,17 @@ void loop(){
     
     // Watering during a specific time.
     timeWatering = millis();
-    while ( millis()-timeWatering < period_watering_min*1000 ){
+    while ( millis()-timeWatering < period_watering_sec*1000 ){
       Serial.print("                  ");
       Serial.print((millis()-timeWatering)/1000);
       Serial.print("s / ");
-      Serial.print(period_watering_min);
+      Serial.print(period_watering_sec);
       Serial.println("s");
       
       lcd.setCursor(0,1);
       lcd.print((millis()-timeWatering)/1000);
       lcd.write("s / ");
-      lcd.print(period_watering_min);
+      lcd.print(period_watering_sec);
       lcd.write("s");
       
       delay(1000);
@@ -450,7 +450,7 @@ void loop(){
     digitalWrite(relayPin, LOW);
     digitalWrite(greenledPin, LOW);
     
-    // Avoid reenter in the watering if period_watering_min is less than one minute.
+    // Avoid reenter in the watering if period_watering_sec is less than one minute.
     while ( (RTC.now().hour()==time_water_evening_H && RTC.now().minute()==time_water_evening_M) ) delay(1000);
   }
   
