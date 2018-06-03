@@ -23,7 +23,7 @@ The main characteristics of these components, the connections to the arduino and
 <table>
   <tr>
     <td> The display: </td>
-    <td> The test circuit is show bellow (the valve is substituted by a light): </td>
+    <td> The test circuit is shown below (the valve is substituted by a light): </td>
   </tr>
   <tr>
     <td> <img src="https://raw.github.com/DanielDagnino/arduino-garden-watering/master/img/lcd.jpg" alt="Display" width="400" /> </td>
